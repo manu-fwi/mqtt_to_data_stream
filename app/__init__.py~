@@ -1,0 +1,16 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from app import models
+
+#Start DB engine
+engine = create_engine('sqlite:///app.db', echo=True)
+models.Base.metadata.create_all(engine)
+Session = sessionmaker(bind=engine,expire_on_commit=False)
+
+#for testing purpose
+with Session() as session:
+    a=models.db_data_streams_head(name="/test-json-date",stream_format="JSON",fields='value,"emission_date_time!%d/%m/%y %X!UTC"')
+    #b=models.db_data_streams_head(name="/test-csv-date",stream_format="CSV",fields='value,"emission_date_time!%d/%m/%y %X!America/Martinique"')
+    session.add(a)
+    #session.add(b)
+    session.commit()
