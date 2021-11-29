@@ -1,0 +1,3 @@
+* config support. Nothing is done yet, everything is hardcoded for now
+* validate the payload (correct field count for CSV, correct fields for json for example): nothing yet.
+* improve logging, very crude for now ;-)
