@@ -40,8 +40,6 @@ def process(msg):
             log("Invlid payload format!")
     #FIXME: no payload structure validation is made against the registered format
 
-#load config
-config.config.load_config("config.txt")
 
 #connect to MQTT broker
 client = mqtt.Client()
