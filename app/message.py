@@ -2,6 +2,7 @@
 # the db on the fly if needed
 from app import models
 from app import Session
+from app.config import log
 from datetime import datetime,timezone
 import pytz
 import json

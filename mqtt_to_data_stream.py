@@ -3,13 +3,9 @@ import socket
 from app import *
 from datetime import datetime,timezone
 from app import message
-
-def log(message):
-    s = datetime.now(timezone.utc).strftime("%x %X")+":"+message
-    if debug_sock is None:
-        print(s)
-    else:
-        debug_sock.send(s.encode('utf-8'))
+from app import config
+from app.config import log
+import sys
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -27,7 +23,7 @@ def on_disconnect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     payload = msg.payload.decode("utf-8")
     log(msg.topic+" "+payload)
-    m = message.message(MQTT_SERVER+msg.topic,payload)
+    m = message.message(config.config.get_config("MQTT_SERVER")+msg.topic,payload)
     messages.append(m)
     
 
@@ -43,16 +39,17 @@ def process(msg):
         except:
             log("Invlid payload format!")
     #FIXME: no payload structure validation is made against the registered format
-    
-MQTT_SERVER="127.0.0.1"
-MQTT_PORT=1883
+
+#load config
+config.config.load_config("config.txt")
+
 #connect to MQTT broker
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
 
-client.connect(MQTT_SERVER, MQTT_PORT, 60)
+client.connect(config.config.get_config("MQTT_SERVER"),int(config.config.get_config("MQTT_PORT")), 60)
 
 #debug_sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 #debug_sock.connect(("192.168.8.200",50000))
